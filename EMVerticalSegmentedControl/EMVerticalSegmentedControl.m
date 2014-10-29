@@ -197,12 +197,26 @@
 #pragma mark - Text Utilities
 
 - (CGSize)getTextSize:(NSString *)text {
-    NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
-    paragraphStyle.lineBreakMode = NSLineBreakByTruncatingTail;
+    if( [ self isIOS7OrLater ] )
+    {
+        NSMutableParagraphStyle *paragraphStyle = [[NSMutableParagraphStyle alloc] init];
+        paragraphStyle.lineBreakMode = NSLineBreakByTruncatingTail;
+        
+        NSDictionary *attributes = @{NSFontAttributeName: self.titleFont,
+                                     NSParagraphStyleAttributeName: paragraphStyle};
+        return [text sizeWithAttributes:attributes];
+    }
+    else
+    {
+        return [ text sizeWithFont: self.titleFont ];
+    }
     
-    NSDictionary *attributes = @{NSFontAttributeName: self.titleFont,
-                                 NSParagraphStyleAttributeName: paragraphStyle};
-    return [text sizeWithAttributes:attributes];
 }
+
+-(BOOL) isIOS7OrLater
+{
+    return [[[UIDevice currentDevice] systemVersion] floatValue] >= 7.0;
+}
+
 
 @end
